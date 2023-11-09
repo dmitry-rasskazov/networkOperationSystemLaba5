@@ -16,18 +16,17 @@ void serveripc()
 {
     int sock; /* дескриптор сокета */
     int nsock; /* дескриптор сокета */
-    int ret; /* возвращаемое значение */
     unsigned int clientAddrLen;
-    struct sockaddr_in server, client; /* адрес сервера */
+    struct sockaddr_in server, client; /* адрес сервера и клиента */
     sock = socket(PF_INET, SOCK_STREAM, 0); /* создание сокета */
-    bzero( &server, sizeof(server) );/* назначение адреса сокету */
+    bzero( &server, sizeof(server) );
     server.sin_family = PF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(PORT);
     bind(sock, (struct sockaddr *) &server, sizeof(server));
     listen(sock, 5); /* переход к прослушиванию приходящих связей */
-    for (;;) {
-        nsock = accept(sock, (struct sockaddr *) &client, &clientAddrLen); /* цикл по запросам на соединение */
+    for (;;) {/* цикл по запросам на соединение */
+        nsock = accept(sock, (struct sockaddr *) &client, &clientAddrLen);
         printf("Client accepted: address=%s, port=%d\n", inet_ntoa(client.sin_addr), ntohs(client.sin_port));
         serv(nsock); /* обращение к циклу чтение-запись */
         close (nsock);/* закрытие текущей связи */
